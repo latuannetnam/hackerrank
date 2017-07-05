@@ -4,12 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.grid_search import GridSearchCV
 import sys
 import logging
 
-POLY_DEGREE = 2
-# LOG_LEVEL = logging.DEBUG
-LOG_LEVEL = logging.INFO
+POLY_DEGREE = 1
+LOG_LEVEL = logging.DEBUG
+#LOG_LEVEL = logging.INFO
 # create logger
 logger = logging.getLogger('hackerrank')
 logger.setLevel(logging.DEBUG)
@@ -21,7 +22,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-def search_best_params(self, model, param_grid, X, Y):
+def search_best_params(model, param_grid, X, Y):
     model_name = model.__class__.__name__
     print('Searching best param for model:', model_name)
     grid_search = GridSearchCV(model, param_grid, n_jobs=1, cv=5)
@@ -43,7 +44,7 @@ def train_predict(train_data, test_data):
     target = train_data[:, -1]
     target = target.ravel()
     # make polynominal features
-    poly = PolynomialFeatures(POLY_DEGREE)
+    poly = PolynomialFeatures(POLY_DEGREE, True)
     combine_data = np.concatenate((input_data, test_data), axis=0)
     combine_data_tf = poly.fit_transform(combine_data)
     # print("Old features:", combine_data.shape, " New poly features:", combine_data_tf.shape)
@@ -57,7 +58,7 @@ def train_predict(train_data, test_data):
     model = LinearRegression()
     # ElasticNet
     # model = ExtraTreesRegressor(
-    #     n_estimators=500, max_depth=10, n_jobs=-1, random_state=456)
+    #     n_estimators=500, max_depth=3, n_jobs=-1, random_state=456)
     param_grid = {"n_estimators": [50, 100, 200, 500],
                   "max_depth": [1, 3, 5, 10],
                   },
@@ -76,6 +77,7 @@ def train_predict(train_data, test_data):
 
 #  ----------------- Main --------------------
 state = 0
+logger.debug("House price prediction")
 for line in sys.stdin:
     # print("state:", state, " line:", line)
     if state == 0:
