@@ -10,7 +10,7 @@ import logging
 
 POLY_DEGREE = 1
 LOG_LEVEL = logging.DEBUG
-#LOG_LEVEL = logging.INFO
+# LOG_LEVEL = logging.INFO
 # create logger
 logger = logging.getLogger('hackerrank')
 logger.setLevel(logging.DEBUG)
